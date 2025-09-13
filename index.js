@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
+const fs = require('fs');
 
 
 const app = express();
@@ -51,6 +52,36 @@ app.post('/calculate', (req, res) => {
 
     // Send the result back to the frontend
     res.send({ result });
+});
+
+// API route for calculation
+app.post('/retain', (req, res) => {
+
+    let state = "0"
+
+    fs.readFile('data/state.txt', 'utf8', (err, data) => { 
+        if (err) {
+            console.error("Error reading file:", err);
+            return;
+            }
+        switch (data) {
+            case '0':
+                console.log('value is 0');
+                state = "1";
+                break;
+            case '1':
+                console.log('value is 1');
+                state = "0";
+                break;
+        }
+        fs.writeFile('data/state.txt', state, (err) => {
+        if (err) {
+            console.error('Error writing file:', err);
+            return;
+            }
+        console.log('File written successfully!');
+        });
+    });
 });
 
 // Start the server

@@ -48,13 +48,14 @@
             <button type="button" onclick="calculate('subtract')">Subtract</button>
             <button type="button" onclick="calculate('multiply')">Multiply</button>
             <button type="button" onclick="calculate('divide')">Divide</button>
+            <button type="button" onclick="retain()">Retain Result</button>
         </form>
 
         <div class="result-box" id="result">Result: </div>
     </div>
 
     <script>
-        // Function to handle the calculation
+        // Handle calculate request
         function calculate(operation) {
             const num1 = document.getElementById('num1').value;
             const num2 = document.getElementById('num2').value;
@@ -75,6 +76,22 @@
                 // Display the result
                 document.getElementById('result').innerText = `Result: ${data.result}`;
             })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = 'Error: Something went wrong.';
+            });
+        }
+
+        // Handle result rention request
+        function retain() {
+
+
+            // Send data to the server for calculation
+            fetch('/retain', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            })
+            .then(response => response.json())
             .catch(error => {
                 console.error('Error:', error);
                 document.getElementById('result').innerText = 'Error: Something went wrong.';
