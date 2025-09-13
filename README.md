@@ -25,7 +25,7 @@ npm -v
 sudo apt update
 sudo apt install nodejs npm
 
-# Install express
+# Install additional node js modules
 npm install express
-
+npm install body-parser
 ```
