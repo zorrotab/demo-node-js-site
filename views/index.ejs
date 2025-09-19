@@ -48,18 +48,16 @@
             <button type="button" onclick="calculate('subtract')">Subtract</button>
             <button type="button" onclick="calculate('multiply')">Multiply</button>
             <button type="button" onclick="calculate('divide')">Divide</button>
-            <button type="button" onclick="retain()">Retain Result</button>
+            
         </form>
 
         <div class="result-box" id="result">Result: </div>
         
         <!-- EJS conditional rendering based on 'state' -->
-        <% if (state === '1') { %>
-            <h1>Welcome, Admin!</h1>
-            <p>You have full access.</p>
+        <% if (state === '0') { %>
+            <button type="button" id="toggle_retain" onclick="retain('1')">Enable Result Retention</button>
         <% } else { %>
-            <h1>Welcome, <%= state %>!</h1>
-            <p>You have limited access.</p>
+            <button type="button" id="toggle_retain" onclick="retain('0')">Disable Result Retention</button>
         <% } %>
 
     </div>
@@ -97,8 +95,17 @@
         }
 
         // Handle result rention request
-        function retain() {
+        function retain(state) {
 
+            const button = document.getElementById('toggle_retain');
+
+            if (state == "1") {
+                button.innerText = "Disable Result Retention";
+                button.value = "Disable Result Retention";
+            } else {
+                button.innerText = "Enable Result Retention";
+                button.value = "Enable Result Retention";
+            }
 
             // Send data to the server for calculation
             fetch('/retain', {
@@ -111,6 +118,16 @@
                 document.getElementById('result').innerText = 'Error: Something went wrong.';
             });
         }
+
+          setInterval(() => {
+    fetch('/check-for-reload') // Make an API call to your Node.js server
+      .then(response => response.json())
+      .then(data => {
+        if (data.shouldReload) {
+          window.location.reload();
+        }
+      });
+  }, 5000); // Poll every 5 seconds
     </script>
 
 </body>

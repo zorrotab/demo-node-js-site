@@ -101,6 +101,12 @@ app.post('/retain', (req, res) => {
     });
 });
 
+app.get('/check-for-reload', (req, res) => {
+    // Determine if a reload is needed based on server-side logic
+    const shouldReload = true; 
+    res.json({ shouldReload });
+  });
+
 // Start the server
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
