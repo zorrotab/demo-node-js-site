@@ -24,34 +24,41 @@ app.post('/calculate', (req, res) => {
     const { num1, num2, operation } = req.body;
     let result;
 
-    // Convert input to numbers
     const number1 = parseFloat(num1);
     const number2 = parseFloat(num2);
 
     // Perform the requested operation
-    switch (operation) {
-        case 'add':
-            result = number1 + number2;
-            break;
-        case 'subtract':
-            result = number1 - number2;
-            break;
-        case 'multiply':
-            result = number1 * number2;
-            break;
-        case 'divide':
-            if (number2 !== 0) {
-                result = number1 / number2;
-            } else {
-                result = 'Error: Division by zero';
+    fs.readFile('data/state.txt', 'utf8', (err, state) => { 
+        if (err) {
+            console.error("Error reading file:", err);
+            return;
             }
-            break;
-        default:
-            result = 'Invalid operation';
-    }
-
-    // Send the result back to the frontend
-    res.send({ result });
+        switch (operation) {
+            case 'add':
+                result = number1 + number2;
+                break;
+            case 'subtract':
+                result = number1 - number2;
+                break;
+            case 'multiply':
+                result = number1 * number2;
+                break;
+            case 'divide':
+                if (number2 !== 0) {
+                    result = number1 / number2;
+                } else {
+                    result = 'Error: Division by zero';
+                }
+                break;
+            default:
+                result = 'Invalid operation';
+        }
+        if (state == "1") {
+            console.log("Retain result")
+        }
+        // Send the result back to the frontend
+        res.send({ result, state });
+    });
 });
 
 // API route for calculation

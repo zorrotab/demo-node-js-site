@@ -75,6 +75,10 @@
             .then(data => {
                 // Display the result
                 document.getElementById('result').innerText = `Result: ${data.result}`;
+                
+                if (data.state == "1") {
+                    document.getElementById('num1').value = data.result;
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
