@@ -3,20 +3,30 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const fs = require('fs');
 
-
 const app = express();
 const port = 8080;
 
-app.listen(port, () => {
-    console.log(`Server listening at http://localhost:${port}`);
-});
+// Set the view engine to EJS
+app.set('view engine', 'ejs');
 
+// Middleware to parse URL-encoded data (forms)
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Serve static files (e.g., CSS, JS) from the 'site' directory
 app.use(express.static(path.join(__dirname, 'site')));
 
+// Route for rendering the main page
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    // Read state from the 'state.txt' file
+    fs.readFile('data/state.txt', 'utf8', (err, state) => {
+        if (err) {
+            console.error("Error reading state file:", err);
+            return res.status(500).send('Error reading state file.');
+        }
+
+        // Render the EJS view and pass the 'state' value
+        res.render('index', { state: state.trim() });
+    });
 });
 
 // API route for calculation

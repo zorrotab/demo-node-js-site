@@ -52,6 +52,16 @@
         </form>
 
         <div class="result-box" id="result">Result: </div>
+        
+        <!-- EJS conditional rendering based on 'state' -->
+        <% if (state === '1') { %>
+            <h1>Welcome, Admin!</h1>
+            <p>You have full access.</p>
+        <% } else { %>
+            <h1>Welcome, <%= state %>!</h1>
+            <p>You have limited access.</p>
+        <% } %>
+
     </div>
 
     <script>

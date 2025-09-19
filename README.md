@@ -28,6 +28,7 @@ sudo apt install nodejs npm
 # Install additional node js modules
 npm install express
 npm install body-parser
+npm install ejs
 ```
 
 ## Changes planned
