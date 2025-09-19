@@ -99,28 +99,34 @@
 
             const button = document.getElementById('toggle_retain');
 
-            if (state == "1") {
-                button.innerText = "Disable Result Retention";
-                button.value = "Disable Result Retention";
-            } else {
-                button.innerText = "Enable Result Retention";
-                button.value = "Enable Result Retention";
-            }
-
             // Send data to the server for calculation
             fetch('/retain', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             })
             .then(response => response.json())
+            .then(data => {
+                // Update the button text based on the new state after server response
+                if (data.state == "1") {
+                    button.innerText = "Disable Result Retention";
+                } else {
+                    button.innerText = "Enable Result Retention";
+                }
+            })
             .catch(error => {
                 console.error('Error:', error);
                 document.getElementById('result').innerText = 'Error: Something went wrong.';
             });
         }
 
-          setInterval(() => {
-    fetch('/check-for-reload') // Make an API call to your Node.js server
+    setInterval(() => {
+    const state = document.getElementById('toggle_retain').innerText;
+    
+    fetch('/check-for-reload', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `state=${state}`
+        })
       .then(response => response.json())
       .then(data => {
         if (data.shouldReload) {

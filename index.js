@@ -97,12 +97,17 @@ app.post('/retain', (req, res) => {
             return;
             }
         console.log('File written successfully!');
+        res.send({ state });
         });
     });
 });
 
 app.get('/check-for-reload', (req, res) => {
     // Determine if a reload is needed based on server-side logic
+
+    const state = req.body;
+    console.log(state)
+
     const shouldReload = true; 
     res.json({ shouldReload });
   });
