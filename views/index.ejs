@@ -54,6 +54,8 @@
         <% } else { %>
             <button type="button" id="toggle_retain" onclick="retain('0')">Disable Result Retention</button>
         <% } %>
+
+        <button type="button" id="reload" onclick="reload()">Reload Saved Value</button>
     </div>
 
     <script>
@@ -103,7 +105,26 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                document.getElementById('result').innerText = "Error: Something went wrong.";
+                document.getElementById('result').innerText = "Error in toggling value retention.";
+            });
+        }
+
+        // Handle reload request
+        function reload() {
+
+            const num1Box = document.getElementById('num1');
+            
+            fetch('/reload', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            })
+            .then(response => response.json())
+            .then(data => {
+                num1Box.value = data.value
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = "Error in reloading saved value.";
             });
         }
     </script>
