@@ -139,6 +139,19 @@ app.post('/retain', (req, res) => {
     });
 });
 
+// Handle retain value toggle button API requests
+app.post('/reload', (req, res) => {
+    fs.readFile(RESULT_FILE_PATH, 'utf8', (err, value) => { 
+        if (err) {
+            if (debug) {
+                console.error("Error reading from file: " + RESULT_FILE_PATH, err);
+            }
+            return;
+        }
+        res.send({ value });
+    });
+});
+
 // Start the server
 app.listen(PORT, () => {
     if (debug) {
