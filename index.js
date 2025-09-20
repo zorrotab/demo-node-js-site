@@ -4,6 +4,7 @@ var debug = false;
 // constants
 const PORT = 8080;
 const STATE_FILE_PATH = "data/state.txt";
+const RESULT_FILE_PATH = "data/result.txt";
 
 // Parse arguements
 const args = process.argv;
@@ -46,7 +47,8 @@ app.get('/', (req, res) => {
 // Handle calculation API requests
 app.post('/calculate', (req, res) => {
     const { num1, num2, operation } = req.body;
-    let result;
+    let result = "0";
+    let value = "v"
 
     const number1 = parseFloat(num1);
     const number2 = parseFloat(num2);
@@ -55,7 +57,7 @@ app.post('/calculate', (req, res) => {
     fs.readFile(STATE_FILE_PATH, 'utf8', (err, state) => { 
         if (err) {
             if (debug) {
-                console.error("Error reading file:", err);
+                console.error("Error reading from file: "+ STATE_FILE_PATH, err);
             }
             return;
         }
@@ -83,7 +85,19 @@ app.post('/calculate', (req, res) => {
             if (debug) {
                 console.log("Retain result")
             }
-        }
+            value = String(result);
+            fs.writeFile(RESULT_FILE_PATH, value, (err) => {
+                if (err) {
+                    if (debug) {
+                        console.error("Error writing to file: " + RESULT_FILE_PATH, err);
+                    }
+                    return;
+                }
+                if (debug) {
+                    console.log("File written successfully!");
+                }
+                });
+            }
         res.send({ result, state });
     });
 });
@@ -96,7 +110,7 @@ app.post('/retain', (req, res) => {
     fs.readFile(STATE_FILE_PATH, 'utf8', (err, data) => { 
         if (err) {
             if (debug) {
-                console.error("Error reading file:", err);
+                console.error("Error reading from file: " + STATE_FILE_PATH, err);
             }
             return;
         }
@@ -113,7 +127,7 @@ app.post('/retain', (req, res) => {
         fs.writeFile(STATE_FILE_PATH, state, (err) => {
         if (err) {
             if (debug) {
-                console.error("Error writing file:", err);
+                console.error("Error writing to file: " + STATE_FILE_PATH, err);
             }
             return;
         }
