@@ -69,7 +69,7 @@
             const num2 = document.getElementById('num2').value;
 
             if (num1 === '' || num2 === '') {
-                alert('Please enter both numbers.');
+                alert("Please enter both numbers.");
                 return;
             }
 
@@ -90,7 +90,7 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                document.getElementById('result').innerText = 'Error: Something went wrong.';
+                document.getElementById('result').innerText = "Error: Something went wrong.";
             });
         }
 
@@ -115,25 +115,9 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                document.getElementById('result').innerText = 'Error: Something went wrong.';
+                document.getElementById('result').innerText = "Error: Something went wrong.";
             });
         }
-
-    setInterval(() => {
-    const state = document.getElementById('toggle_retain').innerText;
-    
-    fetch('/check-for-reload', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `state=${state}`
-        })
-      .then(response => response.json())
-      .then(data => {
-        if (data.shouldReload) {
-          window.location.reload();
-        }
-      });
-  }, 5000); // Poll every 5 seconds
     </script>
 
 </body>
