@@ -31,6 +31,16 @@ npm install body-parser
 npm install ejs
 ```
 
+## Running program
+
+```sh
+# Run in debug mode
+node index.js debug=true
+
+# Run without debug
+node index.js
+```
+
 ## Changes planned
 
 The website currently allows one to put numbers in two text boxes and run an add, substract, multiply or divide on it and see the result.
