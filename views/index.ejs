@@ -37,29 +37,23 @@
     </style>
 </head>
 <body>
-
     <div class="calculator">
         <h2>Simple Calculator</h2>
         <form id="calculator-form">
             <input type="number" id="num1" placeholder="Enter first number" required>
             <input type="number" id="num2" placeholder="Enter second number" required>
-
             <button type="button" onclick="calculate('add')">Add</button>
             <button type="button" onclick="calculate('subtract')">Subtract</button>
             <button type="button" onclick="calculate('multiply')">Multiply</button>
-            <button type="button" onclick="calculate('divide')">Divide</button>
-            
+            <button type="button" onclick="calculate('divide')">Divide</button>  
         </form>
-
         <div class="result-box" id="result">Result: </div>
-        
-        <!-- EJS conditional rendering based on 'state' -->
+
         <% if (state === '0') { %>
             <button type="button" id="toggle_retain" onclick="retain('1')">Enable Result Retention</button>
         <% } else { %>
             <button type="button" id="toggle_retain" onclick="retain('0')">Disable Result Retention</button>
         <% } %>
-
     </div>
 
     <script>
@@ -72,8 +66,6 @@
                 alert("Please enter both numbers.");
                 return;
             }
-
-            // Send data to the server for calculation
             fetch('/calculate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -81,9 +73,7 @@
             })
             .then(response => response.json())
             .then(data => {
-                // Display the result
                 document.getElementById('result').innerText = `Result: ${data.result}`;
-                
                 if (data.state == "1") {
                     document.getElementById('num1').value = data.result;
                 }
@@ -99,14 +89,12 @@
 
             const button = document.getElementById('toggle_retain');
 
-            // Send data to the server for calculation
             fetch('/retain', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             })
             .then(response => response.json())
             .then(data => {
-                // Update the button text based on the new state after server response
                 if (data.state == "1") {
                     button.innerText = "Disable Result Retention";
                 } else {
@@ -119,6 +107,5 @@
             });
         }
     </script>
-
 </body>
 </html>

@@ -8,12 +8,12 @@ const STATE_FILE_PATH = "data/state.txt";
 // Parse arguements
 const args = process.argv;
 args.forEach(arg => {
-  if (arg.includes('=')) {
-    const [key, value] = arg.split('=');
-    if (key == 'debug') {
-        debug = value == 'true';
+    if (arg.includes('=')) {
+        const [key, value] = arg.split('=');
+        if (key == 'debug') {
+            debug = value == 'true';
+        }
     }
-  }
 });
 
 // Configure Node JS
@@ -52,11 +52,13 @@ app.post('/calculate', (req, res) => {
     const number2 = parseFloat(num2);
 
     // Perform the requested operation
-    fs.readFile("data/state.txt", 'utf8', (err, state) => { 
+    fs.readFile(STATE_FILE_PATH, 'utf8', (err, state) => { 
         if (err) {
-            console.error("Error reading file:", err);
-            return;
+            if (debug) {
+                console.error("Error reading file:", err);
             }
+            return;
+        }
         switch (operation) {
             case 'add':
                 result = number1 + number2;
@@ -78,9 +80,10 @@ app.post('/calculate', (req, res) => {
                 result = "Invalid operation";
         }
         if (state == '1') {
-            console.log("Retain result")
+            if (debug) {
+                console.log("Retain result")
+            }
         }
-        // Send the result back to the frontend
         res.send({ result, state });
     });
 });
@@ -90,11 +93,13 @@ app.post('/retain', (req, res) => {
 
     let state = '0'
 
-    fs.readFile("data/state.txt", 'utf8', (err, data) => { 
+    fs.readFile(STATE_FILE_PATH, 'utf8', (err, data) => { 
         if (err) {
-            console.error("Error reading file:", err);
-            return;
+            if (debug) {
+                console.error("Error reading file:", err);
             }
+            return;
+        }
         switch (data) {
             case '0':
                 console.log("value is 0");
@@ -105,12 +110,16 @@ app.post('/retain', (req, res) => {
                 state = '0';
                 break;
         }
-        fs.writeFile("data/state.txt", state, (err) => {
+        fs.writeFile(STATE_FILE_PATH, state, (err) => {
         if (err) {
-            console.error("Error writing file:", err);
-            return;
+            if (debug) {
+                console.error("Error writing file:", err);
             }
-        console.log("File written successfully!");
+            return;
+        }
+        if (debug) {
+            console.log("File written successfully!");
+        }
         res.send({ state });
         });
     });
@@ -118,5 +127,7 @@ app.post('/retain', (req, res) => {
 
 // Start the server
 app.listen(PORT, () => {
-    console.log("Server is running on http://localhost:" + PORT);
+    if (debug) {
+        console.log("Server is running on http://localhost:" + PORT);
+    }
 });
