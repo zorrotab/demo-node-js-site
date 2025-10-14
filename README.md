@@ -4,6 +4,7 @@
 
 Current used versions:
  - Node JS: v22.19.0
+ - Express
  - NPM: 10.9.3
  - NVM: v0.40.3
 
@@ -20,8 +21,22 @@ nvm install --lts
 node -v
 npm -v
 
-# Altnerative: install nodejs and npm via package manager
+# Alternative: install nodejs and npm via package manager
 sudo apt update
 sudo apt install nodejs npm
 
+# Install additional node js modules
+npm install express
+npm install body-parser
+npm install ejs
+```
+
+## Running program
+
+```sh
+# Run in debug mode
+node index.js debug=true
+
+# Run without debug
+node index.js
 ```

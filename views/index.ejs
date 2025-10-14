@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+        }
+        .calculator {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        .calculator input, .calculator button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        .result-box {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h2>Simple Calculator</h2>
+        <form id="calculator-form">
+            <input type="number" id="num1" placeholder="Enter first number" required>
+            <input type="number" id="num2" placeholder="Enter second number" required>
+            <button type="button" onclick="calculate('add')">Add</button>
+            <button type="button" onclick="calculate('subtract')">Subtract</button>
+            <button type="button" onclick="calculate('multiply')">Multiply</button>
+            <button type="button" onclick="calculate('divide')">Divide</button>  
+        </form>
+        <div class="result-box" id="result">Result: </div>
+
+        <% if (state === '0') { %>
+            <button type="button" id="toggle_retain" onclick="retain('1')">Enable Result Retention</button>
+        <% } else { %>
+            <button type="button" id="toggle_retain" onclick="retain('0')">Disable Result Retention</button>
+        <% } %>
+
+        <button type="button" id="reload" onclick="reload()">Reload Saved Value</button>
+    </div>
+
+    <script>
+        // Handle calculate request
+        function calculate(operation) {
+            const num1 = document.getElementById('num1').value;
+            const num2 = document.getElementById('num2').value;
+
+            if (num1 === '' || num2 === '') {
+                alert("Please enter both numbers.");
+                return;
+            }
+            fetch('/calculate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `num1=${num1}&num2=${num2}&operation=${operation}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerText = `Result: ${data.result}`;
+                if (data.state == "1") {
+                    document.getElementById('num1').value = data.result;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = "Error: Something went wrong.";
+            });
+        }
+
+        // Handle result rention request
+        function retain(state) {
+
+            const button = document.getElementById('toggle_retain');
+
+            fetch('/retain', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.state == "1") {
+                    button.innerText = "Disable Result Retention";
+                } else {
+                    button.innerText = "Enable Result Retention";
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = "Error in toggling value retention.";
+            });
+        }
+
+        // Handle reload request
+        function reload() {
+
+            const num1Box = document.getElementById('num1');
+            
+            fetch('/reload', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            })
+            .then(response => response.json())
+            .then(data => {
+                num1Box.value = data.value
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = "Error in reloading saved value.";
+            });
+        }
+    </script>
+</body>
+</html>
